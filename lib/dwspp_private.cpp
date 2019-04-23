@@ -1,5 +1,3 @@
-#include "dwspp.h"
-#include "dwspp_private.h"
 #include <windows.h>
 #include <shlwapi.h>
 #include <shlobj.h>
@@ -7,6 +5,10 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <versionhelpers.h>
+
+#include "dwspp.h"
+#include "dwspp_private.h"
+#include "windows_utils.h"
 
 #ifndef FILE_VER_GET_NEUTRAL
 // Missing prototypes in MinGW headers
@@ -18,11 +20,6 @@ BOOL APIENTRY GetFileVersionInfoExW(_In_ DWORD dwFlags,
                                     _Out_writes_bytes_(dwLen) LPVOID lpData);
 #define FILE_VER_GET_NEUTRAL    0x02
 #endif
-
-bool fileExists(const std::wstring &filePath)
-{
-    return PathFileExistsW(filePath.c_str()) == TRUE;
-}
 
 
 void DWS_Instance_imp::detectWindowsVersion()
@@ -64,6 +61,8 @@ void DWS_Instance_imp::detectWindowsVersion()
 
 void DWS_Instance_imp::init()
 {
+    detectWindowsVersion();
+
     wchar_t systemDirectory[MAX_PATH];
     _systemPath = std::wstring(_wgetenv(L"WinDir"));
     if(SUCCEEDED(SHGetFolderPathW(NULL, CSIDL_WINDOWS, NULL, 0, systemDirectory)))
@@ -71,7 +70,7 @@ void DWS_Instance_imp::init()
         _systemPath = std::wstring(systemDirectory);
     }
 
-    if(fileExists(_systemPath + L"\\Sysnative\\cmd.exe"))
+    if(WindowsUtil::fileExists(_systemPath + L"\\Sysnative\\cmd.exe"))
     {
         _system32Location = _systemPath + + L"\\Sysnative\\";
     }
@@ -92,4 +91,9 @@ DWS_Instance_imp::~DWS_Instance_imp()
 void DWS_Instance_imp::setLogPath(const std::wstring &logPath)
 {
     LogFileName = logPath;
+}
+
+WindowsVersion DWS_Instance_imp::getWindowsVersion()
+{
+    return _windowsVersion;
 }

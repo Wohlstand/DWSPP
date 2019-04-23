@@ -5,8 +5,7 @@
 #include <string>
 #include <vector>
 #include <windows.h>
-
-bool fileExists(const std::wstring &filePath);
+#include "dwspp.h"
 
 class DWS_Instance_imp
 {
@@ -18,17 +17,7 @@ class DWS_Instance_imp
     std::wstring              _system32Location;
     bool                      _win10 = true;
 
-    enum WindowsVersion
-    {
-        WINDOWS_UNKNOWN = 0,
-        WINDOWS_7,
-        WINDOWS_SERVER_2008,
-        WINDOWS_8,
-        WINDOWS_SERVER_2012,
-        WINDOWS_81,
-        WINDOWS_10,
-        WINDOWS_SERVER_2019
-    } _windowsVersion = WINDOWS_UNKNOWN;
+    WindowsVersion _windowsVersion = WINDOWS_UNKNOWN;
 
     void detectWindowsVersion();
 public:
@@ -38,6 +27,8 @@ public:
     ~DWS_Instance_imp();
 
     void setLogPath(const std::wstring &logPath);
+
+    WindowsVersion getWindowsVersion();
 };
 
 
