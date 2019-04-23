@@ -15,6 +15,7 @@ class DWS_Instance_imp
     std::vector<std::wstring> _errorsList;
     int                       _fatalErrors = 0;
     std::wstring              _system32Location;
+    std::wstring              ShellCmdLocation;
     bool                      _win10 = true;
 
     WindowsVersion _windowsVersion = WINDOWS_UNKNOWN;
@@ -29,6 +30,12 @@ public:
     void setLogPath(const std::wstring &logPath);
 
     WindowsVersion getWindowsVersion();
+
+    void nukeMetroApp(std::wstring appName);
+
+    void disableService(std::wstring serviceName);
+
+    void disableScheduleTask(std::wstring currentTask);
 };
 
 

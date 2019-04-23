@@ -14,13 +14,14 @@ namespace WindowsUtil
 bool fileExists(const std::wstring &filePath);
 
 /**
- * @brief Get a string value from the Windows registry
+ * @brief Get a string value from the Windows registry (HKEY Local Machine)
  * @param path Path to the registry section
  * @param key Key
  * @param defaultValue Default value when registry key is absense
  * @return Requested value or default value
  */
-std::wstring getRegistryString(const std::wstring &path, const std::wstring &key, const std::wstring &defaultValue = L"");
+std::wstring getRegistryStrHKLM(const std::wstring &path, const std::wstring &key, const std::wstring &defaultValue = L"");
+std::wstring getRegistryStrHKCU(const std::wstring &path, const std::wstring &key, const std::wstring &defaultValue = L"");
 
 /**
  * @brief Returns the build number version
@@ -51,6 +52,9 @@ std::wstring GetProductName();
  * @return System build label
  */
 std::wstring GetSystemBuild();
+
+int exec(std::wstring commandAndArgs);
+
 
 }
 

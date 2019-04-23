@@ -78,6 +78,8 @@ void DWS_Instance_imp::init()
     {
         _system32Location = _systemPath + + L"\\system32\\";
     }
+
+    ShellCmdLocation = _system32Location + L"cmd.exe";
 }
 
 DWS_Instance_imp::DWS_Instance_imp()
@@ -96,4 +98,20 @@ void DWS_Instance_imp::setLogPath(const std::wstring &logPath)
 WindowsVersion DWS_Instance_imp::getWindowsVersion()
 {
     return _windowsVersion;
+}
+
+void DWS_Instance_imp::nukeMetroApp(std::wstring appName)
+{
+    WindowsUtil::exec(L"powershell -command \"Get-AppxPackage *" + appName + L"* | Remove-AppxPackage\"");
+}
+
+void DWS_Instance_imp::disableService(std::wstring serviceName)
+{
+    WindowsUtil::exec(ShellCmdLocation + L" /c net stop " + serviceName + L"");
+    WindowsUtil::exec(L"powershell -command \"Set-Service -Name " + serviceName + L" -StartupType Disabled\"");
+}
+
+void DWS_Instance_imp::disableScheduleTask(std::wstring currentTask)
+{
+    WindowsUtil::exec(L"SCHTASKS /Change /TN \"" + currentTask + L"\" /disable");
 }
